@@ -1,0 +1,100 @@
+Dragon = 50
+Phoenix = 70
+Unicorn = 00
+Griffin
+Kraken
+Cerberus
+Chimera
+Minotaur
+Kitsune
+Sphinx
+Cyclops
+Yeti
+Centaur
+Harpy
+Medusa
+Pegasus
+Gorgon
+Basilisk
+Roc
+Naga
+Kappa
+Hippogriff
+Banshee
+Faun
+Satyr
+Mermaid/Merman
+Selkie
+Chupacabra
+Bigfoot
+Loch Ness Monster
+Wendigo
+Jackalope
+Kitsune
+Thunderbird
+Yuki-onna
+Tengu
+Bunyip
+Jersey Devil
+Leprechaun
+Valkyrie
+Elf
+Dwarf
+Gnome
+Troll
+Ogre
+Goblin
+Hobbit
+Gorgon
+Lamia
+Basilisk
+Siren
+Cockatrice
+Jabberwocky
+Faerie
+Gorgon
+Simurgh
+Quetzalcoatl
+Thunderbird
+Ifrit
+Jinn
+Qilin
+Bai Ze
+Bakeneko
+Tanuki
+Jorogumo
+Kitsune
+Kappa
+Nue
+Yara-ma-yha-who
+Yowie
+Rainbow Serpent
+Ahuizotl
+Camazotz
+Manananggal
+Tikbalang
+Bakunawa
+Kapre
+Aswang
+Diwata
+Santelmo
+Tiktik
+Sigbin
+Xing Tian
+Houyi
+Nuwa
+Jiangshi
+Qilin
+White Tiger
+Azure Dragon
+Black Tortoise
+Vermilion Bird
+Kirin
+Baku
+Foo Dog
+Ziz
+Anzu
+Lamassu
+Sirin
+Alkonost
+Caladrius
