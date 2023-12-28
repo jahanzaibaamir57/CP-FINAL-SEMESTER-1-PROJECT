@@ -3,9 +3,9 @@
 #include<Windows.h>
 #include<ctime>
 #include<cstdlib>
-#include"struct.cpp"
+#include"struct.cpp" //struct.cpp stores all strutures of the program
 
-#pragma comment(lib, "winmm.lib")
+#pragma comment(lib, "winmm.lib") //This library is for playing music
 
 
 
@@ -21,21 +21,17 @@ inventorySys invent;
 levels level;
 lvl1Enemy dragon;
 lvl2Enemy phoneix;
+lvl3Enemy lvl3E;
+lvl4Enemy lvl4E;
 
 
-
-
-
-
-//Enemies Health
-//int dragonHealth = 50;
 
 
 void startGame();
 void exitGame();
 void character1();
 void inventry();
-void charInfo(int& hlth, int& exp);
+void charInfo(int& hlth, int& exp, int&enehlth);
 int classChar(string cls);
 void selevel();
 
@@ -51,8 +47,16 @@ void lvl2fire();
 void lvl2huma();
 
 void lvl3();
+void lvl3medusa();
+void lvl3centaur();
+void lvl3sphinx();
+void lvl3roc();
 
 void lvl4();
+void lvl4naga();
+void lvl4tBird();
+void lvl4tengue();
+void lvl4valkyrie();
 
 
 int main() {
@@ -189,15 +193,16 @@ void character1() {
 }
 
 //Display Character Information
-void charInfo(int& hlth, int& exp) {
+void charInfo(int& hlth, int& exp, int&eneHlth) {
 	character.characterHealth -= hlth;
 
 	if (character.characterHealth <= 0) character.characterHealth = 0;
+	if (eneHlth <= 0) eneHlth = 0;
 		
-		string details= "\n\n\tPlayer Name:\t" + character.characterName + "\n\tPlayer Class:\t" + character.characterRank + "\n\tHealth:\t\t" + to_string(character.characterHealth) + "\n\tExp Points:\t" + to_string(character.characterExp);
+		string details= "\n\n\tPlayer Name:\t" + character.characterName + "\n\tPlayer Class:\t" + character.characterRank + "\n\tHealth:\t\t" + to_string(character.characterHealth) + "\n\tExp Points:\t" + to_string(character.characterExp) + "\n\n\tEnemy Health: " + to_string(eneHlth) ;
 		for (int i = 0; i < details.length(); i++) {
 			cout <<details[i];
-			Sleep(100);
+			Sleep(30);
 		}
 }
 
@@ -235,11 +240,11 @@ void inventry() {
 	system("cls");
 	int select;
 	cout << "\n\tHere are all weapons";
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < size(invent.weapons); i++) {
 		cout << "\n\tLocked " << i + 1 << " " << invent.weapons[i];
 		cout << endl;
 	}
-	cout << "\n\t1. Main menu\n\t2. Exit Game";
+	cout << "\n\t1. Main menu\n\t2. Exit Game\n\tEnter Option: ";
 	cin >> select;
 
 	if (select == 1) {
@@ -387,11 +392,12 @@ void lvl1BDragon() {
 				dragon.baby = dragon.baby - b;
 				cout << "\n\tYou attacked " << b << " points";
 				a = 0;
-				charInfo(a, b);
+				charInfo(a, b,dragon.baby);
 				if (dragon.baby <= 0) {
 					dragon.baby = 40;
 					character.characterExp += 5;
 					PlaySound(TEXT("victory.wav"), NULL, SND_ASYNC); Sleep(50);
+					PlaySound(TEXT("back.wav"), NULL, SND_ASYNC);
 					cout << "\n\n\tCongratulatoins\n\tBaby Dragon Died and you have earned 5 Exp points.\n";
 					character.characterExp += 5;
 					system("pause");
@@ -451,7 +457,7 @@ void lvl1BDragon() {
 			a = rand() % 10 + 1;
 			cout << "\n\tBaby Dragon attacked " << a << " points\n\t";
 
-			charInfo(a, b);
+			charInfo(a, b,dragon.baby);
 			if (character.characterHealth <= 0) {
 				character.characterHealth = 100;
 				cout << "\n\n\tYou have lost this level.\n";
@@ -472,8 +478,8 @@ void lvl1ADragon() {
 	while (character.characterHealth > 0) {
 
 		if (i % 2 == 0) {
-
-			cout << "\n\n\t1. Attack\n\t2. MainMenu\n\t3. Exit Game\n\tChoose Optoin: ";
+			cout << "\n\n\tYour turn";
+			cout << "\n\t1. Attack\n\t2. MainMenu\n\t3. Exit Game\n\tChoose Optoin: ";
 			cin >> choose;
 			if (choose == "1") {
 				++i;
@@ -481,11 +487,12 @@ void lvl1ADragon() {
 				dragon.adult = dragon.adult - b;
 				cout << "\n\tYou attacked " << b << " points";
 				a = 0;
-				charInfo(a, b);
+				charInfo(a, b,dragon.adult);
 				if (dragon.adult <= 0) {
 					dragon.adult = 50;
 					character.characterExp += 8;
-					PlaySound(TEXT("victory.wav"), NULL, SND_ASYNC);
+					PlaySound(TEXT("victory.wav"), NULL, SND_ASYNC); Sleep(50);
+					PlaySound(TEXT("back.wav"), NULL, SND_ASYNC);
 					cout << "\n\n\tCongratulatoins\n\tAdult Dragon Died.\n\tYou have earned 8 exp points\n";
 					system("pause");
 					lvl1GDragon();
@@ -521,7 +528,7 @@ void lvl1ADragon() {
 			a = rand() % 15 + 1;//Enemy Max attack points
 			cout << "\n\tAdult Dragon attacked " << a << " points\n\t";
 
-			charInfo(a, b);
+			charInfo(a, b,dragon.adult);
 			if (character.characterHealth <= 0) {
 				character.characterHealth = 100;
 				cout << "\n\n\tYou have lost this level.\n";
@@ -551,12 +558,13 @@ void lvl1GDragon() {
 				dragon.giant = dragon.giant - b;
 				cout << "\n\tYou attacked " << b << " points";
 				a = 0;
-				charInfo(a, b);
+				charInfo(a, b,dragon.giant);
 				if (dragon.giant <= 0) {
 					dragon.giant = 70;
 					character.characterExp += 10;
 
-					PlaySound(TEXT("victory.wav"), NULL, SND_ASYNC);
+					PlaySound(TEXT("victory.wav"), NULL, SND_ASYNC); Sleep(50);
+					PlaySound(TEXT("back.wav"), NULL, SND_ASYNC);
 					level.lvl++;
 					cout << "\n\n\tCongratulatoins\n\tGiant Dragon Died\n\tYou have earned 10 Exp points\n\tyou have completed Level 1.\n";
 					system("pause");
@@ -593,7 +601,7 @@ void lvl1GDragon() {
 			a = rand() % 25 + 1;//Enemy max attack points 25
 			cout << "\n\tGiant Dragon attacked " << a << " points\n\t";
 
-			charInfo(a, b);
+			charInfo(a, b,dragon.giant);
 			if (character.characterHealth <= 0) {
 				character.characterHealth = 100;
 				cout << "\n\n\tYou have lost this level.\n";
@@ -614,8 +622,14 @@ void lvl2() {
 	character.characterHealth = 100;
 	system("cls");
 	srand(time(0));
-	charInfo(a, b);
-	cout << "\n\tPress Enter to Continue Game...";
+	string startingMessage = "\n\tPlayer Name:\t" + character.characterName + " \n\tPlayer Class:\t" + character.characterRank + "\n\tPlayer Health:\t" + to_string(character.characterHealth) +
+		"\n\tPlayer exp:\t" + to_string(character.characterExp) +
+		" \n\n\tGame Started\n\n\tDisturbed by recent events, \nthe Crystal Wyvern flees to the Skyward Archipelago. \nMounted on a magical flying creature, the adventurer soars through the skies to confront the wyvern in its crystalline nest.\nAerial challenges and airborne adversaries test the adventurer's skill in retrieving the shard of the hidden crystal.\n\n\tPress Enter to Continue Game...";
+
+	for (int i = 0; i < startingMessage.length(); i++) {
+		cout << startingMessage[i];
+		Sleep(20);
+	}
 	cin.get();
 	cin.ignore();
 	
@@ -659,8 +673,8 @@ void lvl2Bennu() {
 	while (character.characterHealth > 0) {
 
 		if (i % 2 == 0) {
-
-			cout << "\n\n\t1. Attack\n\t2. MainMenu\n\t3. Exit Game\n\tChoose Optoin: ";
+			cout << "\n\n\tYour turn";
+			cout << "\n\t1. Attack\n\t2. MainMenu\n\t3. Exit Game\n\tChoose Optoin: ";
 			cin >> choose;
 			if (choose == "1") {
 				++i;
@@ -668,10 +682,12 @@ void lvl2Bennu() {
 				phoneix.bennu -= b;
 				cout << "\n\tYou attacked " << b << " points";
 				a = 0;
-				charInfo(a, b);
+				charInfo(a, b, phoneix.bennu);
 				if (phoneix.bennu <= 0) {
 					phoneix.bennu = 70;
 					character.characterExp += 10;
+					PlaySound(TEXT("victory.wav"), NULL, SND_ASYNC); Sleep(50);
+					PlaySound(TEXT("back.wav"), NULL, SND_ASYNC);
 					level.lvl++;
 					cout << "\n\n\tCongratulatoins\n\tBennu Phoneix Died\n\tYou have earned 10 Exp Points.\n";
 					system("pause");
@@ -734,7 +750,7 @@ void lvl2Bennu() {
 			a = rand() % 15 + 1; //Enemy attacked points, max 15
 			cout << "\n\tBennu Phoneix attacked " << a << " points\n\t";
 
-			charInfo(a, b);
+			charInfo(a, b,phoneix.bennu);
 			if (character.characterHealth <= 0) {
 				character.characterHealth = 100;
 				cout << "\n\n\tYou have lost this level.\n";
@@ -753,8 +769,8 @@ void lvl2feng() {
 	while (character.characterHealth > 0) {
 
 		if (i % 2 == 0) {
-
-			cout << "\n\n\t1. Attack\n\t2. MainMenu\n\t3. Exit Game\n\tChoose Optoin: ";
+			cout << "\n\n\tYour turn";
+			cout << "\n\t1. Attack\n\t2. MainMenu\n\t3. Exit Game\n\tChoose Optoin: ";
 			cin >> choose;
 			cin.ignore();
 			if (choose == "1") {
@@ -762,9 +778,11 @@ void lvl2feng() {
 				b = classChar(character.characterRank);
 				phoneix.fenghuang -= b;
 				cout << "\n\tYou attacked " << b << " points";
-				charInfo(a, b);
+				charInfo(a, b,phoneix.fenghuang);
 				if (phoneix.fenghuang <= 0) {
 					phoneix.fenghuang = 60;
+					PlaySound(TEXT("victory.wav"), NULL, SND_ASYNC); Sleep(50);
+					PlaySound(TEXT("back.wav"), NULL, SND_ASYNC);
 					character.characterExp += 12;
 					cout << "\n\n\tCongratulatoins\n\tFenghung Phoneix Died\n\tYou have earned 12 Points\n";
 					system("pause");
@@ -823,7 +841,7 @@ void lvl2feng() {
 			a = rand() % 19 + 1; // Enemy attacked points, max 19
 			cout << "\n\tFenghung Phoneix attacked " << a << " points\n\t";
 
-			charInfo(a, b);
+			charInfo(a, b,phoneix.fenghuang);
 			if (character.characterHealth <= 0) {
 				character.characterHealth = 100;
 				cout << "\n\n\tYou have lost this level.\n";
@@ -842,17 +860,19 @@ void lvl2fire() {
 	while (character.characterHealth > 0) {
 
 		if (i % 2 == 0) {
-
-			cout << "\n\n\t1. Attack\n\t2. MainMenu\n\t3. Exit Game\n\tChoose Optoin: ";
+			cout << "\n\n\tYour turn";
+			cout << "\n\t1. Attack\n\t2. MainMenu\n\t3. Exit Game\n\tChoose Optoin: ";
 			cin >> choose;
 			if (choose == "1") {
 				++i;
 				b = classChar(character.characterRank);
 				phoneix.fireBird -= b;
 				cout << "\n\tYou attacked " << b << " points";
-				charInfo(a, b);
+				charInfo(a, b,phoneix.fireBird);
 				if (phoneix.fireBird <= 0) {
 					phoneix.fireBird = 65;
+					PlaySound(TEXT("victory.wav"), NULL, SND_ASYNC); Sleep(50);
+					PlaySound(TEXT("back.wav"), NULL, SND_ASYNC);
 					character.characterExp += 13;
 					cout << "\n\n\tCongratulatoins\n\tFireBird Phoneix Died\n\tYou have earned 13 Exp Points\n";
 					system("pause");
@@ -889,7 +909,7 @@ void lvl2fire() {
 			a = rand() % 19 + 1; // Enemy attacked points, max 19
 			cout << "\n\tFenghung Phoneix attacked " << a << " points\n\t";
 
-			charInfo(a, b);
+			charInfo(a, b,phoneix.fireBird);
 			if (character.characterHealth <= 0) {
 				character.characterHealth = 100;
 				cout << "\n\n\tYou have lost this level.\n";
@@ -908,17 +928,19 @@ void lvl2huma() {
 	while (character.characterHealth > 0) {
 
 		if (i % 2 == 0) {
-
-			cout << "\n\n\t1. Attack\n\t2. MainMenu\n\t3. Exit Game\n\tChoose Optoin: ";
+			cout << "\n\n\tYour turn";
+			cout << "\n\t1. Attack\n\t2. MainMenu\n\t3. Exit Game\n\tChoose Optoin: ";
 			cin >> choose;
 			if (choose == "1") {
 				++i;
 				b = classChar(character.characterRank);
 				phoneix.huma -= b;
 				cout << "\n\tYou attacked " << b << " points";
-				charInfo(a, b);
+				charInfo(a, b,phoneix.huma);
 				if (phoneix.huma <= 0) {
 					phoneix.huma = 75;
+					PlaySound(TEXT("victory.wav"), NULL, SND_ASYNC); Sleep(50);
+					PlaySound(TEXT("back.wav"), NULL, SND_ASYNC);
 					character.characterExp += 15;
 					level.lvl++;
 					cout << "\n\n\tCongratulatoins\n\tHuma Phoneix Died\n\tYou have earned 15 Exp Points\n";
@@ -956,7 +978,7 @@ void lvl2huma() {
 			a = rand() % 19 + 1; // Enemy attacked points, max 19
 			cout << "\n\tHuma Phoneix attacked " << a << " points\n\t";
 
-			charInfo(a, b);
+			charInfo(a, b, phoneix.huma);
 			if (character.characterHealth <= 0) {
 				character.characterHealth = 100;
 				cout << "\n\n\tYou have lost this level.\n";
@@ -981,12 +1003,407 @@ void lvl3() {
 				|---->Sphinx
 				|
 				|__/->Roc
+		void lvl3medusa();
+		void lvl3centaur();
+		void lvl3sphinx();
+		void lvl3roc();
 	*/
 }
+
+void lvl3medusa() {
+	
+}
+
+void lvl3centaur(){
+	
+}
+
+void lvl3sphinx(){
+	
+}
+
+void lvl3roc(){
+	
+}
+
+
 
 //Level4
 void lvl4() {
 	/*
 		Route ** Naga --> ThunderBird --> Tengu --> Valkyrie
+
+
 	*/
+	int a = 0, b = 0;
+	character.characterHealth = 100;
+	system("cls");
+	srand(time(0));
+	string startingMessage = "\n\tPlayer Name:\t" + character.characterName + " \n\tPlayer Class:\t" + character.characterRank + "\n\tPlayer Health:\t" + to_string(character.characterHealth) +
+		"\n\tPlayer exp:\t" + to_string(character.characterExp) +
+		" \n\n\tGame Started\n\n\tA cosmic portal appears in the Enchanted Forest, leading to the Astral Nexus. The adventurer explores this dimension, solving celestial puzzles and gaining the favor of astral entities. Discovering the rogue sorcerers' plan to manipulate time, the adventurer must safeguard a cosmic artifact from falling into the wrong hands.\n\n\tPress Enter to Continue Game...";
+
+	for (int i = 0; i < startingMessage.length(); i++) {
+		cout << startingMessage[i];
+		Sleep(20);
+	}
+	cin.get();
+	cin.ignore();
+
+	string selectWays;
+	do
+	{
+		cout << "\n\n\tThere are 4 Unknown ways\n\tSelect b/w 1 to 4: ";
+
+		cin >> selectWays;
+		if (selectWays == "1" || selectWays == "2" || selectWays == "3" || selectWays == "4") {
+			int randWay = rand() % 4 + 1;
+			if (randWay == 1) {
+				//Naga
+				lvl4naga();
+			}
+			else if (randWay == 2) {
+				//Thunder Bird
+				lvl4tBird();
+			}
+			else if (randWay == 3) {
+				//Tengue
+				lvl4tengue();
+			}
+			else {
+				//Valkyrie
+				lvl4valkyrie();
+			}
+			break;
+		}
+		else {
+			system("cls");
+			cout << "\n\tInvalid Selection";
+		}
+	} while (selectWays != "1" || selectWays != "2" || selectWays != "3" || selectWays != "4");
+
+	
+}
+
+void lvl4naga(){
+	int a = 0, b = 0, i = 0;
+	string choose, selectWays;
+	cout << "\n\tHere is Naga";
+	while (character.characterHealth > 0) {
+
+		if (i % 2 == 0) {
+			cout << "\n\n\tYour turn";
+			cout << "\n\t1. Attack\n\t2. MainMenu\n\t3. Exit Game\n\tChoose Optoin: ";
+			cin >> choose;
+			if (choose == "1") {
+				++i;
+				b = classChar(character.characterRank);
+				lvl4E.naga -= b;
+				cout << "\n\tYou attacked " << b << " points";
+				a = 0;
+				charInfo(a, b,lvl4E.naga);
+				if (lvl4E.naga <= 0) {
+					lvl4E.naga = 70;
+					PlaySound(TEXT("victory.wav"), NULL, SND_ASYNC); Sleep(50);
+					PlaySound(TEXT("back.wav"), NULL, SND_ASYNC);
+					character.characterExp += 10;
+					cout << "\n\n\tCongratulatoins\n\tNaga Died\n\tYou have earned 10 Exp Points.\n";
+					system("pause");
+					do
+					{
+
+						cout << "\n\n\tThere are 3 Unknown ways\n\tSelect between 1 to 3: ";
+
+						cin >> selectWays;
+						if (selectWays == "1" || selectWays == "2" || selectWays == "3") {
+							int randWay = rand() % 3 + 1;
+							if (randWay == 1) {
+								//Thunder Bird
+								lvl4tBird();
+							}
+							else if (randWay == 2) {
+								//Tengue
+								lvl4tengue();
+							}
+							else if (randWay == 3) {
+								//Valkyrie
+								lvl4valkyrie();
+							}
+							break;
+						}
+						else {
+							system("cls");
+							cout << "\n\tInvalid Selection";
+						}
+					} while (selectWays != "1" || selectWays != "2"||selectWays !="3");
+					break;
+				}
+			}
+			else if (choose == "2") {
+				system("cls");
+				startGame();
+				break;
+			}
+			else if (choose == "3") {
+
+				exitGame();
+				break;
+			}
+			else {
+				system("cls");
+				continue;
+
+			}
+		}
+		else
+		{
+			++i;
+			cout << "\n\n\tNaga turn, Naga is attacking.";
+			Sleep(1000);
+			cout << ".";
+			Sleep(1000);
+			cout << ".";
+			Sleep(1000);
+			b = 0;
+			a = rand() % 15 + 1; //Enemy attacked points, max 15
+			cout << "\n\tNaga attacked " << a << " points\n\t";
+
+			charInfo(a, b, lvl4E.naga);
+			if (character.characterHealth <= 0) {
+				character.characterHealth = 100;
+				cout << "\n\n\tYou have lost this level.\n";
+				system("pause");
+				system("cls");
+				startGame();
+				break;
+			}
+		}
+	}
+}
+void lvl4tBird(){
+	int a = 0, b = 0, i = 0;
+	string choose, selectWays;
+	cout << "\n\tHere is Thunder Bird";
+	while (character.characterHealth > 0) {
+
+		if (i % 2 == 0) {
+			cout << "\n\n\tYour turn";
+			cout << "\n\t1. Attack\n\t2. MainMenu\n\t3. Exit Game\n\tChoose Optoin: ";
+			cin >> choose;
+			cin.ignore();
+			if (choose == "1") {
+				++i;
+				b = classChar(character.characterRank);
+				lvl4E.tBird -= b;
+				cout << "\n\tYou attacked " << b << " points";
+				charInfo(a, b,lvl4E.tBird);
+				if (lvl4E.tBird <= 0) {
+					lvl4E.tBird = 90;
+					PlaySound(TEXT("victory.wav"), NULL, SND_ASYNC); Sleep(50);
+					PlaySound(TEXT("back.wav"), NULL, SND_ASYNC);
+					character.characterExp += 12;
+					cout << "\n\n\tCongratulatoins\n\tThunder Bird Died\n\tYou have earned 12 Points\n";
+					system("pause");
+					do
+					{
+
+						cout << "\n\n\tThere are 2 Unknown ways\n\tSelect between 1 to 2: ";
+
+						cin >> selectWays;
+						if (selectWays == "1" || selectWays == "2") {
+							int randWay = rand() % 2 + 1;
+							if (randWay == 1) {
+								//Tengue
+								lvl4tengue();
+							}
+							else if (randWay == 2) {
+								//Valkyrie
+								lvl4valkyrie();
+							}
+							break;
+						}
+						else {
+							system("cls");
+							cout << "\n\tInvalid Selection";
+						}
+					} while (selectWays != "1" || selectWays != "2");
+					break;
+				}
+			}
+			else if (choose == "2") {
+				system("cls");
+				startGame();
+				break;
+			}
+			else if (choose == "3") {
+
+				exitGame();
+				break;
+			}
+			else {
+				system("cls");
+				continue;
+
+			}
+		}
+		else
+		{
+			++i;
+			cout << "\n\n\tThunder Bird turn, Thunder Bird is attacking.";
+			Sleep(1000);
+			cout << ".";
+			Sleep(1000);
+			cout << ".";
+			Sleep(1000);
+			b = 0;
+			a = rand() % 19 + 1; // Enemy attacked points, max 19
+			cout << "\n\tThunder Bird attacked " << a << " points\n\t";
+
+			charInfo(a, b,lvl4E.tBird);
+			if (character.characterHealth <= 0) {
+				character.characterHealth = 100;
+				cout << "\n\n\tYou have lost this level.\n";
+				system("pause");
+				system("cls");
+				startGame();
+				break;
+			}
+		}
+	}
+}
+void lvl4tengue(){
+	cout << "\n\tHere is Tengue";
+	int a = 0, b = 0, i = 0;
+	string choose, selectWays;
+	while (character.characterHealth > 0) {
+
+		if (i % 2 == 0) {
+			cout << "\n\n\tYour turn";
+			cout << "\n\t1. Attack\n\t2. MainMenu\n\t3. Exit Game\n\tChoose Optoin: ";
+			cin >> choose;
+			if (choose == "1") {
+				++i;
+				b = classChar(character.characterRank);
+				lvl4E.tengue -= b;
+				cout << "\n\tYou attacked " << b << " points";
+				charInfo(a, b, lvl4E.tengue);
+				if (lvl4E.tengue <= 0) {
+					lvl4E.tengue = 100;
+					PlaySound(TEXT("victory.wav"), NULL, SND_ASYNC); Sleep(50);
+					PlaySound(TEXT("back.wav"), NULL, SND_ASYNC);
+					character.characterExp += 13;
+					cout << "\n\n\tCongratulatoins\n\tTengue Died\n\tYou have earned 13 Exp Points\n";
+					system("pause");
+					lvl4valkyrie();
+					break;
+				}
+			}
+			else if (choose == "2") {
+				system("cls");
+				startGame();
+				break;
+			}
+			else if (choose == "3") {
+
+				exitGame();
+				break;
+			}
+			else {
+				system("cls");
+				continue;
+
+			}
+		}
+		else
+		{
+			++i;
+			cout << "\n\n\tTengue turn, Tengue is attacking.";
+			Sleep(1000);
+			cout << ".";
+			Sleep(1000);
+			cout << ".";
+			Sleep(1000);
+			b = 0;
+			a = rand() % 19 + 1; // Enemy attacked points, max 19
+			cout << "\n\tTengue attacked " << a << " points\n\t";
+			charInfo(a, b, lvl4E.tengue);
+			if (character.characterHealth <= 0) {
+				character.characterHealth = 100;
+				cout << "\n\n\tYou have lost this level.\n";
+				system("pause");
+				system("cls");
+				startGame();
+				break;
+			}
+		}
+	}
+}
+void lvl4valkyrie() {
+	cout << "\n\tOpps, Here is Valkyrie The Most Dangerious Enemy.";
+	int a = 0, b = 0, i = 0;
+	string choose;
+	while (character.characterHealth > 0) {
+
+		if (i % 2 == 0) {
+			cout << "\n\n\tYour turn";
+			cout << "\n\t1. Attack\n\t2. MainMenu\n\t3. Exit Game\n\tChoose Optoin: ";
+			cin >> choose;
+			if (choose == "1") {
+				++i;
+				b = classChar(character.characterRank);
+				lvl4E.valkyrie -= b;
+				cout << "\n\tYou attacked " << b << " points";
+				charInfo(a, b,lvl4E.tengue);
+				if (lvl4E.valkyrie <= 0) {
+					lvl4E.valkyrie = 120;
+					PlaySound(TEXT("victory.wav"), NULL, SND_ASYNC); Sleep(50);
+					PlaySound(TEXT("back.wav"), NULL, SND_ASYNC);
+					character.characterExp += 15;
+					if(level.lvl != 5 || level.lvl <5) level.lvl++;
+					cout << "\n\n\tValkyrie Died\n\tYou have Completed Game\n\tYou have earned 15 Exp Points\n";
+					system("pause");
+					startGame();
+					break;
+				}
+			}
+			else if (choose == "2") {
+				system("cls");
+				startGame();
+				break;
+			}
+			else if (choose == "3") {
+
+				exitGame();
+				break;
+			}
+			else {
+				system("cls");
+				continue;
+
+			}
+		}
+		else
+		{
+			++i;
+			cout << "\n\n\tValkyrie turn, Valkyrie is attacking.";
+			Sleep(1000);
+			cout << ".";
+			Sleep(1000);
+			cout << ".";
+			Sleep(1000);
+			b = 0;
+			a = rand() % 30 + 1; // Enemy attacked points, max 30
+			cout << "\n\tValkyrie attacked " << a << " points\n\t";
+
+			charInfo(a, b, lvl4E.valkyrie);
+			if (character.characterHealth <= 0) {
+				character.characterHealth = 100;
+				cout << "\n\n\tYou have lost this level.\n";
+				system("pause");
+				system("cls");
+				startGame();
+				break;
+			}
+		}
+	}
 }
